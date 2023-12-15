@@ -17,8 +17,11 @@ class TestView(discord.ui.View):
         self.lang = lang
         self.index = index
         self.result = []
+        labels = {'ja':['はい','いいえ'], 'en': ['Yes', 'No']}
+        TestView.get_item(self, custom_id='yes').label = labels[self.lang][0]
+        TestView.get_item(self, custom_id='no').label = labels[self.lang][1]
             
-    @discord.ui.button(label='Yes', style=discord.ButtonStyle.red)
+    @discord.ui.button(label=None, style=discord.ButtonStyle.red, custom_id='yes')
     async def yes(self, button: discord.ui.Button, interaction: discord.Interaction):
         self.result.append(load_attr(self.lang, self.index)) # add attribute of type to list 
         self.index += 1
@@ -31,7 +34,7 @@ class TestView(discord.ui.View):
         else:
             await interaction.response.edit_message(embed=gen_question(self.lang, self.index), view=self)
         
-    @discord.ui.button(label="No", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label=None, style=discord.ButtonStyle.primary, custom_id='no')
     async def No(self, button: discord.ui.Button, interaction: discord.Interaction):
         # attribute of case :'No'
         if load_attr(self.lang, self.index) == 'N':
@@ -126,7 +129,7 @@ async def on_message(message: discord.Message):
         return
 
 
-@bot.command(name="test", description="性格タイプ診断テストを開始します")
+@bot.command(name="test", description="性格診断テストを開始(Start Personality Diagnostic Test)")
 async def test(ctx: discord.ApplicationContext,
                lang: Option(str, '言語は？ - language?', choices=['ja', 'en'])):
     embed=gen_question(lang, 0)
@@ -137,7 +140,7 @@ async def test(ctx: discord.ApplicationContext,
                                                 )
 
 
-@bot.command(name="doc", description="性格タイプ解説を表示します")
+@bot.command(name="exp", description="性格タイプ解説を表示(View Personality Type Explanation)")
 async def doc(ctx: discord.ApplicationContext, 
               lang: Option(str, '言語は？ - language?', choices=['ja', 'en'])):
     file, embed = gen_exp(lang, 0)
