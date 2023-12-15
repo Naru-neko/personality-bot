@@ -40,8 +40,8 @@ class TestView(discord.ui.View):
             self.result.append('F')
         elif load_attr(self.lang, self.index) == 'J':
             self.result.append('P')
-        elif load_attr(self.lang, self.index) == 'I':
-            self.result.append('E')
+        elif load_attr(self.lang, self.index) == 'E':
+            self.result.append('I')
         self.index += 1
         button.disabled = False
         if self.index == question_size(self.lang):
